@@ -1,0 +1,6 @@
+# go build drops the compiled generator here when run without -o
+/stats
+
+# Generated graphics. Kept out of local commits so hand-edits and the bot
+# never race; the workflow force-adds them, which is what puts them on GitHub.
+/assets/
