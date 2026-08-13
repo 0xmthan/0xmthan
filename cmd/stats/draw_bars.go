@@ -28,9 +28,11 @@ func drawLangs(s Summary) string {
 	}
 
 	for gi, g := range groups {
-		p.WriteString(`<g opacity="0">` + fade(delay(0.10, 0.10, gi)) +
-			label(g.gx, I(12), strings.ToUpper(g.title), 9,
-				opts{cls: "m-f", extra: ` letter-spacing="1.3"`}) + `</g>`)
+		p.WriteString(`<g opacity="0">`)
+		p.WriteString(fade(delay(0.10, 0.10, gi)))
+		p.WriteString(label(g.gx, I(12), strings.ToUpper(g.title), 9,
+			opts{cls: "m-f", extra: ` letter-spacing="1.3"`}))
+		p.WriteString(`</g>`)
 		if len(g.data) == 0 {
 			continue
 		}
@@ -64,15 +66,16 @@ func drawLangs(s Summary) string {
 			if len(name) > 11 {
 				name = name[:11]
 			}
-			p.WriteString(`<g opacity="0">` +
-				fade(delay(delay(0.24, 0.10, gi), 0.05, ri)) +
-				label(g.gx, I(y+8), name, 11, opts{cls: "e-f"}) +
-				label(F(g.gx.v+colw-6), I(y+8), shown, 11,
-					opts{cls: "m-f", anchor: "end"}) + `</g>`)
-			p.WriteString(fmt.Sprintf(`<g clip-path="url(#%s)">`, cid) +
-				hbar(g.gx.v+nameW, float64(y), barMax, 7, "w") +
-				hbar(g.gx.v+nameW, float64(y), barMax*float64(c.Value)/float64(top), 7, "") +
-				`</g>`)
+			p.WriteString(`<g opacity="0">`)
+			p.WriteString(fade(delay(delay(0.24, 0.10, gi), 0.05, ri)))
+			p.WriteString(label(g.gx, I(y+8), name, 11, opts{cls: "e-f"}))
+			p.WriteString(label(F(g.gx.v+colw-6), I(y+8), shown, 11,
+				opts{cls: "m-f", anchor: "end"}))
+			p.WriteString(`</g>`)
+			fmt.Fprintf(&p, `<g clip-path="url(#%s)">`, cid)
+			p.WriteString(hbar(g.gx.v+nameW, float64(y), barMax, 7, "w"))
+			p.WriteString(hbar(g.gx.v+nameW, float64(y), barMax*float64(c.Value)/float64(top), 7, ""))
+			p.WriteString(`</g>`)
 		}
 		p.WriteString(cursor)
 	}
@@ -98,9 +101,11 @@ func drawWeekday(s Summary) string {
 
 	var p strings.Builder
 	p.WriteString(head(Width, H, ""))
-	p.WriteString(`<g opacity="0">` + fade(0.10) +
-		label(I(Left), I(12), "BY WEEKDAY", 9,
-			opts{cls: "m-f", extra: ` letter-spacing="1.3"`}) + `</g>`)
+	p.WriteString(`<g opacity="0">`)
+	p.WriteString(fade(0.10))
+	p.WriteString(label(I(Left), I(12), "BY WEEKDAY", 9,
+		opts{cls: "m-f", extra: ` letter-spacing="1.3"`}))
+	p.WriteString(`</g>`)
 
 	top := 0
 	for _, v := range totals {
@@ -122,14 +127,16 @@ func drawWeekday(s Summary) string {
 		if val == top && val != 0 {
 			cls = "e-f"
 		}
-		p.WriteString(`<g opacity="0">` + fade(delay(0.24, 0.05, i)) +
-			label(I(Left), I(y+8), lab, 11, opts{cls: cls}) +
-			label(I(Width), I(y+8), strconv.Itoa(val), 11,
-				opts{cls: "m-f", anchor: "end"}) + `</g>`)
-		p.WriteString(`<g clip-path="url(#rw)">` +
-			hbar(Left+nameW, float64(y), barMax, 7, "w") +
-			hbar(Left+nameW, float64(y), barMax*float64(val)/float64(top), 7, "") +
-			`</g>`)
+		p.WriteString(`<g opacity="0">`)
+		p.WriteString(fade(delay(0.24, 0.05, i)))
+		p.WriteString(label(I(Left), I(y+8), lab, 11, opts{cls: cls}))
+		p.WriteString(label(I(Width), I(y+8), strconv.Itoa(val), 11,
+			opts{cls: "m-f", anchor: "end"}))
+		p.WriteString(`</g>`)
+		p.WriteString(`<g clip-path="url(#rw)">`)
+		p.WriteString(hbar(Left+nameW, float64(y), barMax, 7, "w"))
+		p.WriteString(hbar(Left+nameW, float64(y), barMax*float64(val)/float64(top), 7, ""))
+		p.WriteString(`</g>`)
 	}
 
 	p.WriteString(cursor)

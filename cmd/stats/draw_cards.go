@@ -50,9 +50,9 @@ func drawStreak(s Summary) string {
 	p.WriteString(head(Width, H, ""))
 
 	mid := float64(Width) / 2
-	p.WriteString(fmt.Sprintf(`<line x1="%.0f" y1="16" x2="%.0f" y2="80" `+
+	fmt.Fprintf(&p, `<line x1="%.0f" y1="16" x2="%.0f" y2="80" `+
 		`class="u-s" stroke-width="1" opacity="0">%s</line>`,
-		mid, mid, fade(0.20)))
+		mid, mid, fade(0.20))
 
 	for i, c := range cells {
 		// First column is a plain int offset; the second lands on a float.
@@ -62,12 +62,14 @@ func drawStreak(s Summary) string {
 			x = F(mid + Left)
 			glyph = iconTrophy
 		}
-		p.WriteString(`<g opacity="0">` + fade(delay(0.12, 0.14, i)) +
-			icon(x, glyph) +
-			label(x.Add(I(36)), I(44), strconv.Itoa(c.val), 34,
-				opts{cls: "e-f", extra: ` font-weight="600"`}) +
-			label(x.Add(I(36)), I(64), c.lab, 11, opts{}) +
-			label(x.Add(I(36)), I(80), c.span, 10, opts{}) + `</g>`)
+		p.WriteString(`<g opacity="0">`)
+		p.WriteString(fade(delay(0.12, 0.14, i)))
+		p.WriteString(icon(x, glyph))
+		p.WriteString(label(x.Add(I(36)), I(44), strconv.Itoa(c.val), 34,
+			opts{cls: "e-f", extra: ` font-weight="600"`}))
+		p.WriteString(label(x.Add(I(36)), I(64), c.lab, 11, opts{}))
+		p.WriteString(label(x.Add(I(36)), I(80), c.span, 10, opts{}))
+		p.WriteString(`</g>`)
 	}
 
 	p.WriteString(`</svg>`)
@@ -96,18 +98,20 @@ func drawSocial(s Summary) string {
 
 	for i := 1; i < n; i++ {
 		x := colw * float64(i)
-		p.WriteString(fmt.Sprintf(`<line x1="%.0f" y1="16" x2="%.0f" y2="80" `+
+		fmt.Fprintf(&p, `<line x1="%.0f" y1="16" x2="%.0f" y2="80" `+
 			`class="u-s" stroke-width="1" opacity="0">%s</line>`,
-			x, x, fade(0.20)))
+			x, x, fade(0.20))
 	}
 
 	for i, c := range cells {
 		x := F(float64(colw*float64(i)) + Left)
-		p.WriteString(`<g opacity="0">` + fade(delay(0.12, 0.14, i)) +
-			icon(x, c.icon) +
-			label(x.Add(I(36)), I(44), strconv.Itoa(c.val), 30,
-				opts{cls: "e-f", extra: ` font-weight="600"`}) +
-			label(x.Add(I(36)), I(64), c.lab, 11, opts{}) + `</g>`)
+		p.WriteString(`<g opacity="0">`)
+		p.WriteString(fade(delay(0.12, 0.14, i)))
+		p.WriteString(icon(x, c.icon))
+		p.WriteString(label(x.Add(I(36)), I(44), strconv.Itoa(c.val), 30,
+			opts{cls: "e-f", extra: ` font-weight="600"`}))
+		p.WriteString(label(x.Add(I(36)), I(64), c.lab, 11, opts{}))
+		p.WriteString(`</g>`)
 	}
 
 	p.WriteString(`</svg>`)

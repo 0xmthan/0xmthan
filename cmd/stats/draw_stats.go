@@ -27,22 +27,25 @@ func drawStats(s Summary) string {
 	var p strings.Builder
 	p.WriteString(head(Width, H, ""))
 
-	p.WriteString(`<g opacity="0">` + fade(0.10) +
-		label(I(0), I(50), strconv.Itoa(s.Total), 52,
-			opts{cls: "e-f", extra: ` font-weight="600"`}) +
-		label(I(0), I(72), "contributions in the last year", 12, opts{}) +
-		`</g>`)
+	p.WriteString(`<g opacity="0">`)
+	p.WriteString(fade(0.10))
+	p.WriteString(label(I(0), I(50), strconv.Itoa(s.Total), 52,
+		opts{cls: "e-f", extra: ` font-weight="600"`}))
+	p.WriteString(label(I(0), I(72), "contributions in the last year", 12, opts{}))
+	p.WriteString(`</g>`)
 
 	secondary := []struct {
 		val int
 		lab string
 	}{{s.Active, "active days"}, {s.BestWeek, "best week"}}
 	for i, sec := range secondary {
-		p.WriteString(`<g opacity="0">` + fade(delay(0.30, 0.12, i)) +
-			label(I(Width), I(30+i*40), strconv.Itoa(sec.val), 19,
-				opts{cls: "e-f", anchor: "end", extra: ` font-weight="600"`}) +
-			label(I(Width), I(47+i*40), sec.lab, 11,
-				opts{cls: "m-f", anchor: "end"}) + `</g>`)
+		p.WriteString(`<g opacity="0">`)
+		p.WriteString(fade(delay(0.30, 0.12, i)))
+		p.WriteString(label(I(Width), I(30+i*40), strconv.Itoa(sec.val), 19,
+			opts{cls: "e-f", anchor: "end", extra: ` font-weight="600"`}))
+		p.WriteString(label(I(Width), I(47+i*40), sec.lab, 11,
+			opts{cls: "m-f", anchor: "end"}))
+		p.WriteString(`</g>`)
 	}
 
 	base, top := H-10, H-58
@@ -59,9 +62,9 @@ func drawStats(s Summary) string {
 	}
 
 	for _, y := range []float64{float64(top), float64(top) + float64(span)/2, float64(base)} {
-		p.WriteString(fmt.Sprintf(`<line x1="0" y1="%.1f" x2="%d" y2="%.1f" `+
+		fmt.Fprintf(&p, `<line x1="0" y1="%.1f" x2="%d" y2="%.1f" `+
 			`class="u-s" stroke-width="1" stroke-dasharray="2 4" opacity="0">`+
-			`%s</line>`, y, Width, y, fade(0.15)))
+			`%s</line>`, y, Width, y, fade(0.15))
 	}
 
 	clip, cursor := wipe("rs", I(0), I(top-6), I(Width), I(span+8), 0.50)
@@ -89,9 +92,9 @@ func drawStats(s Summary) string {
 	p.WriteString(cursor)
 
 	end := pts[len(pts)-1]
-	p.WriteString(fmt.Sprintf(`<circle cx="%.1f" cy="%.1f" r="4.5" `+
+	fmt.Fprintf(&p, `<circle cx="%.1f" cy="%.1f" r="4.5" `+
 		`class="e-f r" stroke-width="2" opacity="0">%s</circle>`,
-		end.x-2, end.y, fade(0.50+Reveal, 0.35)))
+		end.x-2, end.y, fade(0.50+Reveal, 0.35))
 
 	p.WriteString(`</svg>`)
 	return p.String()

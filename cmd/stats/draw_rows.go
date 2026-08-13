@@ -18,9 +18,11 @@ func drawActivity(s Summary) string {
 
 	var p strings.Builder
 	p.WriteString(head(Width, H, ""))
-	p.WriteString(`<g opacity="0">` + fade(0.10) +
-		label(I(Left), I(12), "CONTRIBUTION MIX", 9,
-			opts{cls: "m-f", extra: ` letter-spacing="1.3"`}) + `</g>`)
+	p.WriteString(`<g opacity="0">`)
+	p.WriteString(fade(0.10))
+	p.WriteString(label(I(Left), I(12), "CONTRIBUTION MIX", 9,
+		opts{cls: "m-f", extra: ` letter-spacing="1.3"`}))
+	p.WriteString(`</g>`)
 
 	top := 0
 	for _, r := range rows {
@@ -38,14 +40,16 @@ func drawActivity(s Summary) string {
 
 	for i, r := range rows {
 		y := 24 + i*24
-		p.WriteString(`<g opacity="0">` + fade(delay(0.24, 0.06, i)) +
-			label(I(Left), I(y+8), r.Name, 11, opts{cls: "e-f"}) +
-			label(I(Width), I(y+8), strconv.Itoa(r.Value), 11,
-				opts{cls: "m-f", anchor: "end"}) + `</g>`)
-		p.WriteString(`<g clip-path="url(#ra)">` +
-			hbar(Left+nameW, float64(y), barMax, 7, "w") +
-			hbar(Left+nameW, float64(y), barMax*float64(r.Value)/float64(top), 7, "") +
-			`</g>`)
+		p.WriteString(`<g opacity="0">`)
+		p.WriteString(fade(delay(0.24, 0.06, i)))
+		p.WriteString(label(I(Left), I(y+8), r.Name, 11, opts{cls: "e-f"}))
+		p.WriteString(label(I(Width), I(y+8), strconv.Itoa(r.Value), 11,
+			opts{cls: "m-f", anchor: "end"}))
+		p.WriteString(`</g>`)
+		p.WriteString(`<g clip-path="url(#ra)">`)
+		p.WriteString(hbar(Left+nameW, float64(y), barMax, 7, "w"))
+		p.WriteString(hbar(Left+nameW, float64(y), barMax*float64(r.Value)/float64(top), 7, ""))
+		p.WriteString(`</g>`)
 	}
 
 	p.WriteString(cursor)
@@ -65,9 +69,11 @@ func drawRepos(s Summary) string {
 
 	var p strings.Builder
 	p.WriteString(head(Width, H, ""))
-	p.WriteString(`<g opacity="0">` + fade(0.10) +
-		label(I(Left), I(12), "TOP REPOS", 9,
-			opts{cls: "m-f", extra: ` letter-spacing="1.3"`}) + `</g>`)
+	p.WriteString(`<g opacity="0">`)
+	p.WriteString(fade(0.10))
+	p.WriteString(label(I(Left), I(12), "TOP REPOS", 9,
+		opts{cls: "m-f", extra: ` letter-spacing="1.3"`}))
+	p.WriteString(`</g>`)
 	if len(rows) == 0 {
 		p.WriteString(`</svg>`)
 		return p.String()
@@ -97,14 +103,16 @@ func drawRepos(s Summary) string {
 			name += fmt.Sprintf(`  <tspan class="m-f" font-size="10">%s</tspan>`,
 				strings.ToLower(r.Lang))
 		}
-		p.WriteString(`<g opacity="0">` + fade(delay(0.24, 0.06, i)) +
-			label(I(Left), I(y+8), name, 11, opts{cls: "e-f"}) +
-			label(I(Width), I(y+8), "&#9733; "+strconv.Itoa(r.Stars), 11,
-				opts{cls: "m-f", anchor: "end"}) + `</g>`)
-		p.WriteString(`<g clip-path="url(#rr)">` +
-			hbar(Left+nameW, float64(y), barMax, 7, "w") +
-			hbar(Left+nameW, float64(y), barMax*float64(r.Stars)/float64(top), 7, "") +
-			`</g>`)
+		p.WriteString(`<g opacity="0">`)
+		p.WriteString(fade(delay(0.24, 0.06, i)))
+		p.WriteString(label(I(Left), I(y+8), name, 11, opts{cls: "e-f"}))
+		p.WriteString(label(I(Width), I(y+8), "&#9733; "+strconv.Itoa(r.Stars), 11,
+			opts{cls: "m-f", anchor: "end"}))
+		p.WriteString(`</g>`)
+		p.WriteString(`<g clip-path="url(#rr)">`)
+		p.WriteString(hbar(Left+nameW, float64(y), barMax, 7, "w"))
+		p.WriteString(hbar(Left+nameW, float64(y), barMax*float64(r.Stars)/float64(top), 7, ""))
+		p.WriteString(`</g>`)
 	}
 
 	p.WriteString(cursor)
