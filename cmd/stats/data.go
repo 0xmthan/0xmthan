@@ -215,6 +215,21 @@ func streaks(days []Day) (current, longest Streak) {
 	return current, longest
 }
 
+func fullWeeks(weeks [][]Day, today string) []int {
+	out := make([]int, 0, len(weeks))
+	for _, w := range weeks {
+		if len(w) != 7 || w[6].Date >= today {
+			continue
+		}
+		sum := 0
+		for _, d := range w {
+			sum += d.ContributionCount
+		}
+		out = append(out, sum)
+	}
+	return out
+}
+
 // rank sorts by count, ties by name so runs never reshuffle. Top five.
 func rank(m map[string]int) []Count {
 	out := make([]Count, 0, len(m))
@@ -297,22 +312,25 @@ func summarise(u *User) Summary {
 	cal := u.ContributionsCollection.ContributionCalendar
 
 	weeks := make([][]Day, 0, len(cal.Weeks))
-	weekly := make([]int, 0, len(cal.Weeks))
 	var days []Day
-	active, best := 0, 0
+	active := 0
 	for _, w := range cal.Weeks {
 		weeks = append(weeks, w.ContributionDays)
 		days = append(days, w.ContributionDays...)
-		sum := 0
 		for _, d := range w.ContributionDays {
-			sum += d.ContributionCount
 			if d.ContributionCount > 0 {
 				active++
 			}
 		}
-		weekly = append(weekly, sum)
-		if sum > best {
-			best = sum
+	}
+
+	// Weeks keeps every day, partial ends included, because the year heatmap
+	// should still show today. Only the sparkline drops the unfinished weeks.
+	weekly := fullWeeks(weeks, time.Now().UTC().Format("2006-01-02"))
+	best := 0
+	for _, v := range weekly {
+		if v > best {
+			best = v
 		}
 	}
 
